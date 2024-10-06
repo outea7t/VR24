@@ -64,3 +64,74 @@ public class NewBehaviourScript : MonoBehaviour
 
 ```
 
+## ДЗ №3
+
+- Добавил наклоненную плоскость, по которой скатывается модель геймпада, также считаются столковения геймпада с плоскостями, и их количество выводится на экран. Если количество столкновений больше или равно 5, то сердцевина геймпада меняет цвет с синего на зеленый
+
+GamepadCollision.cs:
+```cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GamepadCollision : MonoBehaviour
+{
+    public byte r = 100;
+    public byte g = 255;
+    public byte b = 150;
+    public byte alpha = 255;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        CollisionCounter.collisionCount += 1;
+        if (CollisionCounter.collisionCount >= 5)
+        {
+            this.GetComponent<Renderer>().material.color = new Color32(r, g, b, alpha);
+        }
+    }
+}
+```
+
+CollisionCounter.cs:
+```cs
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CollisionCounter : MonoBehaviour
+{
+    public Text collisionCounterText;
+    static public int collisionCount;
+    // Start is called before the first frame update
+    void Start()
+    {
+       
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (collisionCounterText != null)
+        {
+            collisionCounterText.text = $"Count of collisions: {collisionCount}";
+        }
+    }
+}
+
+```
+
+
+
