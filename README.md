@@ -133,5 +133,11 @@ public class CollisionCounter : MonoBehaviour
 
 ```
 
+## ДЗ №4
+
+- Сделал модель дома в блендере, добавил текстуры на нее, добавил модель в проект
+
+  <img width="622" alt="image" src="https://github.com/user-attachments/assets/7ea720bc-64ca-4da4-8473-e1fbd3442ff2">
+
 
 
