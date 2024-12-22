@@ -139,5 +139,110 @@ public class CollisionCounter : MonoBehaviour
 
   <img width="622" alt="image" src="https://github.com/user-attachments/assets/7ea720bc-64ca-4da4-8473-e1fbd3442ff2">
 
+## ДЗ №5 
+- Добавил запрос к облачному хранилищу, где хранится `JSON` файл с содержанием:
+```
+{
+    "header": "Эта информация была получена с облачного хранилища, загружена и вставлена в это текстовое поле",
+    "bottomText": "Какой-то случайный текст, тоже загруженный с облачного хранилища",
+    "planeColor": "red"
+}
+```
+
+В скрипте (код скрипта ниже) я получаю этот файл, вытаскиваю из него информацию и значение полей `header` и `bottom` присваиваю присваиваю текстовым полям на сцене (фото ниже). Значение цвета `planeColor` я проверяю на значения `"red"`, `"green"` и `"blue"`, и присваиваю плоскости этот цвет.
+
+<img width="1080" alt="Без названия" src="https://github.com/user-attachments/assets/bd5a63f7-bf8d-475d-8996-03380274ceca" />
+
+Код скрипта: 
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.IO;
+using UnityEngine.UI;
+using UnityEngine.Networking;
+using UnityEngine.EventSystems;
+using Unity.VisualScripting;
+
+public class JsonHandler : MonoBehaviour
+{
+    public Text header;
+    public Text bottomText;
+    public GameObject coloredPlane;
+    public string planeColor;
+    public string jsonURL;
+    public JsonClass jsonData;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+        StartCoroutine(getData());
+    }
+    IEnumerator getData() 
+    {
+        Debug.Log("Загрузка...");
+
+        var uwr = new UnityWebRequest(jsonURL);
+        uwr.method = UnityWebRequest.kHttpVerbGET;
+        var resultFile = Path.Combine(Application.persistentDataPath, "result.json");
+        var dh = new DownloadHandlerFile(resultFile);
+        dh.removeFileOnAbort = true;
+        uwr.downloadHandler = dh;
+        yield return uwr.SendWebRequest();
+        if (uwr.result != UnityWebRequest.Result.Success) 
+        {
+            header.text = "Ошибка получения данных!";
+        }
+        else 
+        {
+            Debug.Log("Файл сохранен по пути:" + resultFile);
+            jsonData = JsonUtility.FromJson<JsonClass>(File.ReadAllText(Application.persistentDataPath + "/result.json"));
+            
+            header.text = jsonData.header.ToString();
+            bottomText.text = jsonData.bottomText.ToString();
+            planeColor = jsonData.planeColor.ToString();
+            GetColor(planeColor);
+
+            yield return StartCoroutine(getData());
+        }
+    }
+
+    void GetColor(string colorName) 
+    {
+        byte r = 100;
+        byte g = 100;
+        byte b = 100;
+        byte alpha = 255;
+        if (colorName == "red")
+        {
+            r = 255;
+        }
+        else if (colorName == "green")
+        {
+            g = 255;
+        }
+        else if (colorName == "blue") 
+        {
+            b = 255;
+        }
+
+        coloredPlane.GetComponent<Renderer>().material.color = new Color32(r, g, b, alpha);
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    [System.Serializable]
+    public class JsonClass
+    {
+        public string header;
+        public string bottomText;
+        public string planeColor;
+    }
+}
+```
 
 
