@@ -153,8 +153,8 @@ public class CollisionCounter : MonoBehaviour
 
 <img width="1080" alt="Без названия" src="https://github.com/user-attachments/assets/bd5a63f7-bf8d-475d-8996-03380274ceca" />
 
-Код скрипта: 
-```
+Код скрипта JsonHandler.cs: 
+```cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
